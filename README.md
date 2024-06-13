@@ -1,7 +1,3 @@
-Sure, here's a short README file for your project:
-
----
-
 # Government Worker Birthdays API
 
 This is a backend API that parses the website [https://yedilov.online/birthdays](https://yedilov.online/birthdays) to get the birthdays of governmental workers and provides them through an API. It uses Node.js, Express, Puppeteer, and Cheerio.
@@ -26,7 +22,3 @@ This is a backend API that parses the website [https://yedilov.online/birthdays]
 - Express
 - Puppeteer
 - Cheerio
-
----
-
-Feel free to adjust this README to include any additional information or instructions specific to your project!
