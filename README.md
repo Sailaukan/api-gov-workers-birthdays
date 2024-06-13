@@ -8,7 +8,7 @@ This is a backend API that parses the website [https://yedilov.online/birthdays]
 
 ## Installation
 
-1. Clone the repository: `git clone https://github.com/your-username/your-repo.git`
+1. Clone the repository: `git clone https://github.com/Sailaukan/api-gov-workers-birthdays.git`
 2. Install dependencies: `npm install`
 
 ## Usage
