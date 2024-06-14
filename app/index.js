@@ -9,23 +9,30 @@ const url = 'https://yedilov.online/birthdays';
 let birthdays = [];
 let birthdayDates = [];
 let groupedBirthdays = [];
-let month = ''
+let month = '';
 
-const groupBirthdays = (birthdays) => {
+const groupBirthdays = (birthdays, dates) => {
     let groupedBirthdays = [];
     let currentGroup = [];
+    let dateIndex = 0;
 
     for (let i = 0; i < birthdays.length; i++) {
         if (birthdays[i] !== '') {
             currentGroup.push(birthdays[i]);
         } else if (currentGroup.length > 0 && birthdays[i - 1] !== '') {
-            groupedBirthdays.push([...currentGroup]);
+            groupedBirthdays.push({
+                birthday: dates[dateIndex++],
+                names: [...currentGroup]
+            });
             currentGroup = [];
         }
     }
 
     if (currentGroup.length > 0) {
-        groupedBirthdays.push([...currentGroup]);
+        groupedBirthdays.push({
+            birthday: dates[dateIndex],
+            names: [...currentGroup]
+        });
     }
 
     return groupedBirthdays;
@@ -38,27 +45,27 @@ const fetchData = async () => {
         await page.goto(url, { waitUntil: 'networkidle2' });
 
         const content = await page.content();
-        
+
         const $ = cheerio.load(content);
 
         birthdays = [];
+        birthdayDates = [];
 
         $(".birthdays__title").each((i, e) => {
             const text = $(e).text().trim();
             const firstWord = text.split(' ')[0];
             month = text.split(' ')[1];
-            birthdayDates.push(firstWord);
+            birthdayDates.push(firstWord+" "+month);
         });
 
-        $(".grid__item").each((i, e) => { 
+        $(".grid__item").each((i, e) => {
             const name = $(e).find('.block__flex_space h5').text().trim();
             birthdays.push(name);
         });
 
-        groupedBirthdays = groupBirthdays(birthdays);
+        groupedBirthdays = groupBirthdays(birthdays, birthdayDates);
 
         console.log(groupedBirthdays);
-        console.log(birthdayDates);
 
         await browser.close();
     } catch (error) {
@@ -71,8 +78,7 @@ fetchData();
 setInterval(fetchData, 3600000);
 
 app.get('/birthdays', (req, res) => {
-    console.log([...groupedBirthdays, birthdayDates])
-    res.send([...groupedBirthdays, birthdayDates]);
+    res.json(groupedBirthdays);
 });
 
 app.listen(port, () => {
